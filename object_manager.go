@@ -38,7 +38,7 @@ type IBObjectManager interface {
 	CreateCNAMERecord(canonical string, recordname string, dnsview string) (*RecordCNAME, error)
 	GetCNAMERecordByRef(ref string) (*RecordCNAME, error)
 	DeleteCNAMERecord(ref string) (string, error)
-	CreateTXTRecord(canonical string, recordname string, dnsview string) (*RecordTXT, error)
+	CreateTXTRecord(text string, recordname string, dnsview string) (*RecordTXT, error)
 	GetTXTRecordByRef(ref string) (*RecordTXT, error)
 	DeleteTXTRecord(ref string) (string, error)
 	CreatePTRRecord(netview string, dnsview string, recordname string, cidr string, ipAddr string, vmID string, vmName string) (*RecordPTR, error)
