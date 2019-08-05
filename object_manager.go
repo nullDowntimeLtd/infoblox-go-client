@@ -36,8 +36,11 @@ type IBObjectManager interface {
 	GetARecordByRef(ref string) (*RecordA, error)
 	DeleteARecord(ref string) (string, error)
 	CreateCNAMERecord(canonical string, recordname string, dnsview string) (*RecordCNAME, error)
-	GetCNAMERecordByRef(ref string) (*RecordA, error)
+	GetCNAMERecordByRef(ref string) (*RecordCNAME, error)
 	DeleteCNAMERecord(ref string) (string, error)
+	CreateTXTRecord(canonical string, recordname string, dnsview string) (*RecordTXT, error)
+	GetTXTRecordByRef(ref string) (*RecordTXT, error)
+	DeleteTXTRecord(ref string) (string, error)
 	CreatePTRRecord(netview string, dnsview string, recordname string, cidr string, ipAddr string, vmID string, vmName string) (*RecordPTR, error)
 	GetPTRRecordByRef(ref string) (*RecordPTR, error)
 	DeletePTRRecord(ref string) (string, error)
@@ -378,7 +381,7 @@ func (objMgr *ObjectManager) UpdateFixedAddress(fixedAddrRef string, matchClient
 		if validateMatchClient(matchClient) {
 			updateFixedAddr.MatchClient = matchClient
 		} else {
-			return nil , fmt.Errorf("wrong value for match_client passed %s \n ", matchClient)
+			return nil, fmt.Errorf("wrong value for match_client passed %s \n ", matchClient)
 		}
 	}
 
@@ -571,6 +574,32 @@ func (objMgr *ObjectManager) DeleteCNAMERecord(ref string) (string, error) {
 	return objMgr.connector.DeleteObject(ref)
 }
 
+// CreateTXTRecord creates TXT record based on the range of inputs
+func (objMgr *ObjectManager) CreateTXTRecord(text string, recordname string, dnsview string) (*RecordTXT, error) {
+
+	recordTXT := NewRecordTXT(RecordTXT{
+		View: dnsview,
+		Name: recordname,
+		Text: text})
+
+	ref, err := objMgr.connector.CreateObject(recordTXT)
+	recordTXT.Ref = ref
+	return recordTXT, err
+}
+
+// GetTXTRecordByRef obtains a TXT record identified by a "ref" string
+func (objMgr *ObjectManager) GetTXTRecordByRef(ref string) (*RecordTXT, error) {
+	recordTXT := NewRecordTXT(RecordTXT{})
+	err := objMgr.connector.GetObject(recordTXT, ref, &recordTXT)
+	return recordTXT, err
+}
+
+// DeleteTXTRecord deletes text record identified by a "ref" string
+func (objMgr *ObjectManager) DeleteTXTRecord(ref string) (string, error) {
+	return objMgr.connector.DeleteObject(ref)
+}
+
+// CreatePTRRecord creates a PTR record based on a range of inputs
 func (objMgr *ObjectManager) CreatePTRRecord(netview string, dnsview string, recordname string, cidr string, ipAddr string, vmID string, vmName string) (*RecordPTR, error) {
 
 	ea := objMgr.getBasicEA(true)
@@ -596,12 +625,14 @@ func (objMgr *ObjectManager) CreatePTRRecord(netview string, dnsview string, rec
 	return recordPTR, err
 }
 
+// GetPTRRecordByRef obtains info about PTR record given a ref as string
 func (objMgr *ObjectManager) GetPTRRecordByRef(ref string) (*RecordPTR, error) {
 	recordPTR := NewRecordPTR(RecordPTR{})
 	err := objMgr.connector.GetObject(recordPTR, ref, &recordPTR)
 	return recordPTR, err
 }
 
+// DeletePTRRecord deletes a PTR record given ref as string
 func (objMgr *ObjectManager) DeletePTRRecord(ref string) (string, error) {
 	return objMgr.connector.DeleteObject(ref)
 }
@@ -671,7 +702,7 @@ func (objMgr *ObjectManager) GetLicense() ([]License, error) {
 	return res, err
 }
 
-// GetLicense returns the license details for grid
+// GetGridLicense returns the license details for grid
 func (objMgr *ObjectManager) GetGridLicense() ([]License, error) {
 	var res []License
 

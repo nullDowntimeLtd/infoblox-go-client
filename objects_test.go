@@ -364,6 +364,31 @@ var _ = Describe("Objects", func() {
 			})
 		})
 
+		Context("RecordTXT object", func() {
+			name := "bind_text.domain.com"
+			text := "text.domain.com"
+			view := "default"
+			zone := "domain.com"
+
+			rc := NewRecordTXT(RecordTXT{
+				Name: name,
+				Text: text,
+				View: view,
+				Zone: zone})
+
+			It("should set fields correctly", func() {
+				Expect(rc.Name).To(Equal(name))
+				Expect(rc.Text).To(Equal(text))
+				Expect(rc.View).To(Equal(view))
+				Expect(rc.Zone).To(Equal(zone))
+			})
+
+			It("should set base fields correctly", func() {
+				Expect(rc.ObjectType()).To(Equal("record:txt"))
+				Expect(rc.ReturnFields()).To(ConsistOf("extattrs", "name", "text", "view", "zone"))
+			})
+		})
+
 		Context("RecordHostIpv4Addr object", func() {
 			netviewName := "globalview"
 			cidr := "25.0.7.0/24"
