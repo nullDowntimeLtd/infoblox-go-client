@@ -4,7 +4,8 @@ package main
 import (
 	"log"
 
-	ibclient "github.com/nullDowntimeLTD/infoblox-go-client"
+  // Commented out to not confuse go mod, uncomment to use this example
+	//ibclient "github.com/nullDowntimeLTD/infoblox-go-client"
 )
 
 func main() {

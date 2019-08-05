@@ -3,7 +3,6 @@ module github.com/nullDowntimeLtd/infoblox-go-client
 go 1.12
 
 require (
-	github.com/nullDowntimeLTD/infoblox-go-client v0.0.0-20190805085443-42f8f10e95f8
 	github.com/onsi/ginkgo v1.7.0
 	github.com/onsi/gomega v1.4.3
 	github.com/sirupsen/logrus v1.3.0
